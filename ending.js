@@ -236,6 +236,14 @@ window.addEventListener("DOMContentLoaded", () => {
   createButton("да");
 });
 function finalSequence() {
+  // Остановить основную музыку
+audio.pause();
+audio.currentTime = 0;
+
+// Воспроизвести done.mp3
+const doneSound = new Audio("assets/done.mp3");
+doneSound.play().catch(err => console.warn("done.mp3 failed:", err));
+
   // Зайчик исчезает
   rabbit.style.display = 'none';
 
@@ -269,5 +277,5 @@ function finalSequence() {
     // Переход на room.html через 10 секунд
     setTimeout(() => {
       window.location.href = "room.html";
-    }, 10000);
+    }, 5000);
 }
