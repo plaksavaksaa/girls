@@ -9,18 +9,33 @@ let isTyping = false;
 const overlayLeft = document.getElementById("overlayLeft");
 const overlayRight = document.getElementById("overlayRight");
 
+const seen = {
+  bed: false,
+  panties: false,
+  fluttershy: false,
+  door: false,
+};
+
+function checkCompletion() {
+  return Object.values(seen).every(v => v === true);
+}
+
 document.querySelectorAll(".nav-zone").forEach(zone => {
   const direction = zone.dataset.direction;
   const overlay = direction === "left" ? overlayLeft : overlayRight;
 
   zone.addEventListener("mouseenter", () => {
-    if (overlay) overlay.style.opacity = "1";
+    if (checkCompletion()) overlay.style.opacity = "1";
   });
+
   zone.addEventListener("mouseleave", () => {
-    if (overlay) overlay.style.opacity = "0";
+    overlay.style.opacity = "0";
   });
+
   zone.addEventListener("click", () => {
-    window.location.href = "ending.html";
+    if (checkCompletion()) {
+      window.location.href = "ending.html";
+    }
   });
 });
 
@@ -44,7 +59,8 @@ function typeText(text, speed = 30) {
 }
 
 items.forEach(item => {
-  const label = item.dataset.label?.startsWith("look to") ? item.dataset.label : `look to ${item.dataset.label}`;
+  const name = item.dataset.label;
+  const label = name?.startsWith("look to") ? name : `look to ${name}`;
   const message = item.dataset.caption;
 
   item.addEventListener("mousemove", (e) => {
@@ -61,6 +77,7 @@ items.forEach(item => {
   item.addEventListener("click", () => {
     if (message && !isTyping) {
       typeText(message);
+      if (name in seen) seen[name] = true;
     }
   });
 });
